@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BoVideoUI</class>
+ <widget class="QWidget" name="BoVideoUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#BoVideoUI
+{
+		background-color:rgb(136, 138, 133);
+}
+QPushButton:hover
+{
+		background-color:rgb(136, 138, 133);
+}
+QPushButton:!hover
+{
+		background-color:rgb(46, 52, 54);
+}</string>
+  </property>
+  <widget class="QPushButton" name="pushButtonCloseWindow">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>0</y>
+     <width>30</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+  </widget>
+  <widget class="BoVideoWidget" name="openGLWidgetSrcOne">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>30</y>
+     <width>400</width>
+     <height>300</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonOpenFile">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>340</y>
+     <width>90</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>open file</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>BoVideoWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>BoVideoWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButtonCloseWindow</sender>
+   <signal>clicked()</signal>
+   <receiver>BoVideoUI</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>786</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>784</x>
+     <y>31</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
