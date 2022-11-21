@@ -63,6 +63,22 @@ QPushButton:!hover
     <string>open file</string>
    </property>
   </widget>
+  <widget class="QSlider" name="horizontalSliderProgress">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>370</y>
+     <width>400</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>999</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -73,22 +89,5 @@ QPushButton:!hover
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButtonCloseWindow</sender>
-   <signal>clicked()</signal>
-   <receiver>BoVideoUI</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>786</x>
-     <y>22</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>784</x>
-     <y>31</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

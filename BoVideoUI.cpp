@@ -8,14 +8,38 @@
 
 BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
     ui->setupUi(this);
+
     connect(ui->pushButtonOpenFile, SIGNAL(clicked()), this, SLOT(openFile()));
+    connect(ui->pushButtonCloseWindow, SIGNAL(clicked()), this,
+            SLOT(killThread()));
+
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(&BoVideoThread::getInstance(), SIGNAL(ViewImageOne(cv::Mat)),
             ui->openGLWidgetSrcOne, SLOT(setImage(cv::Mat)));
+    connect(&BoVideoThread::getInstance(), SIGNAL(threadExit()), this,
+            SLOT(close()));
+
+    connect(ui->horizontalSliderProgress, SIGNAL(sliderPressed()), this,
+            SLOT(sliderPressed()));
+    connect(ui->horizontalSliderProgress, SIGNAL(sliderReleased()), this,
+            SLOT(sliderPressed()));
+    connect(ui->horizontalSliderProgress, SIGNAL(sliderMoved(int)), this,
+            SLOT(sliderMoved(int)));
+
     setWindowFlags(Qt::FramelessWindowHint);
+    // 记录timerID然后才能关闭定时器
+    startTimer(40);
 }
 
 BoVideoUI::~BoVideoUI() { delete ui; }
+
+void BoVideoUI::timerEvent(QTimerEvent *event) {
+    if (m_sliderPressed)
+        return;
+    double position = BoVideoThread::getInstance().getPlayPosition();
+    ui->horizontalSliderProgress->setValue(
+        (int)(position * ui->horizontalSliderProgress->maximum()));
+}
 
 void BoVideoUI::openFile() {
     // nullptr 改为 this会报错，且界面有可能卡死
@@ -31,4 +55,15 @@ void BoVideoUI::openFile() {
         QMessageBox::information(this, "", "failed to open" + filename);
         return;
     }
+}
+
+void BoVideoUI::killThread() { BoVideoThread::getInstance().setIsExit(true); }
+
+void BoVideoUI::sliderPressed() { m_sliderPressed = true; }
+
+void BoVideoUI::sliderReleased() { m_sliderPressed = false; }
+
+void BoVideoUI::sliderMoved(int value) {
+    BoVideoThread::getInstance().seek((double)value /
+                                      ui->horizontalSliderProgress->maximum());
 }

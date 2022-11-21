@@ -14,11 +14,19 @@ class BoVideoUI : public QWidget {
     explicit BoVideoUI(QWidget *parent = 0);
     ~BoVideoUI();
 
+    void timerEvent(QTimerEvent *event) override;
+
   private slots:
     void openFile();
+    void killThread();
+
+    void sliderPressed();
+    void sliderReleased();
+    void sliderMoved(int value);
 
   private:
     Ui::BoVideoUI *ui;
+    bool m_sliderPressed;
 };
 
 #endif // WIDGET_H

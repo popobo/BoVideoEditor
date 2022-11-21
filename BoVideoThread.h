@@ -17,19 +17,29 @@ class BoVideoThread : public QThread {
 
     void setIsExit(bool value);
 
+    int getFps() const;
+
+    double getPlayPosition();
+
+    bool seek(double position);
+
   private:
     BoVideoThread();
     BoVideoThread(const BoVideoThread &videoThread) = delete;
     BoVideoThread &operator=(const BoVideoThread &videoThread) = delete;
 
   private:
-    cv::VideoCapture videoCapture1;
-    std::mutex mutexOpenFile;
-    bool isExit = false;
+    cv::VideoCapture m_videoCaptureOne;
+    std::mutex m_mutexOpenFile;
+    bool m_isExit = false;
+    double m_fps = 25;
+    double m_totalFrameOne = 0;
 
   signals:
     // 保证信号能被处理，否则可能内存溢出
     void ViewImageOne(cv::Mat mat);
+
+    void threadExit();
 };
 
 #endif // BOVIDEOTHREAD_H
