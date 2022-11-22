@@ -1,4 +1,5 @@
 #include "BoVideoUI.h"
+#include "BoVideoFilter.h"
 #include "ui_BoVideoUI.h"
 #include <BoVideoThread.h>
 #include <QFileDialog>
@@ -16,8 +17,15 @@ BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(&BoVideoThread::getInstance(), SIGNAL(ViewImageOne(cv::Mat)),
             ui->openGLWidgetSrcOne, SLOT(setImage(cv::Mat)));
+    // 输出视频显示信号
+    connect(&BoVideoThread::getInstance(), SIGNAL(ViewImageResult(cv::Mat)),
+            ui->openGLWidgetResult, SLOT(setImage(cv::Mat)));
+
     connect(&BoVideoThread::getInstance(), SIGNAL(threadExit()), this,
             SLOT(close()));
+    // 导出视频结束
+    connect(&BoVideoThread::getInstance(), SIGNAL(saveEnd()), this,
+            SLOT(exportEnd()));
 
     connect(ui->horizontalSliderProgress, SIGNAL(sliderPressed()), this,
             SLOT(sliderPressed()));
@@ -25,6 +33,11 @@ BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
             SLOT(sliderPressed()));
     connect(ui->horizontalSliderProgress, SIGNAL(sliderMoved(int)), this,
             SLOT(sliderMoved(int)));
+
+    connect(ui->pushButtonOpenExport, SIGNAL(clicked()), this,
+            SLOT(exportFile()));
+
+    connect(ui->pushButtonSet, SIGNAL(clicked()), this, SLOT(setFilter()));
 
     setWindowFlags(Qt::FramelessWindowHint);
     // 记录timerID然后才能关闭定时器
@@ -67,3 +80,33 @@ void BoVideoUI::sliderMoved(int value) {
     BoVideoThread::getInstance().seek((double)value /
                                       ui->horizontalSliderProgress->maximum());
 }
+
+void BoVideoUI::setFilter() {
+    BoVideoFilter::getInstance()->clearTask();
+    if (ui->spinBoxBright->value() > 0 ||
+        ui->doubleSpinBoxContrast->value() > 1) {
+        BoVideoFilter::getInstance()->addTask(
+            Task{TASK_GAIN,
+                 {(double)(ui->spinBoxBright->value()),
+                  ui->doubleSpinBoxContrast->value()}});
+    }
+}
+
+void BoVideoUI::exportFile() {
+    if (BoVideoThread::getInstance().getIsWrite()) {
+        BoVideoThread::getInstance().stopSave();
+        ui->pushButtonOpenExport->setText("Export");
+        return;
+    }
+    QString filename = QFileDialog::getSaveFileName(nullptr, "save", "out.avi");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    std::string filenameStd = filename.toLocal8Bit().data();
+    if (BoVideoThread::getInstance().startSave(filenameStd)) {
+        ui->pushButtonOpenExport->setText("Stop Export");
+    }
+}
+
+void BoVideoUI::exportEnd() { ui->pushButtonOpenExport->setText("Export"); }

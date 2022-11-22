@@ -23,6 +23,11 @@ class BoVideoUI : public QWidget {
     void sliderPressed();
     void sliderReleased();
     void sliderMoved(int value);
+    void setFilter();
+
+    void exportFile();
+
+    void exportEnd();
 
   private:
     Ui::BoVideoUI *ui;

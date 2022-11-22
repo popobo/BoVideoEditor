@@ -23,6 +23,14 @@ class BoVideoThread : public QThread {
 
     bool seek(double position);
 
+    // 开始保存视频
+    bool startSave(const std::string &filename, int width = 0, int height = 0);
+
+    // 停止保存视频，写入视频帧的索引
+    bool stopSave();
+
+    bool getIsWrite() const;
+
   private:
     BoVideoThread();
     BoVideoThread(const BoVideoThread &videoThread) = delete;
@@ -30,16 +38,22 @@ class BoVideoThread : public QThread {
 
   private:
     cv::VideoCapture m_videoCaptureOne;
+    cv::VideoWriter m_videoWriter;
     std::mutex m_mutexOpenFile;
     bool m_isExit = false;
     double m_fps = 25;
     double m_totalFrameOne = 0;
+    bool m_isWrite = false;
 
   signals:
     // 保证信号能被处理，否则可能内存溢出
     void ViewImageOne(cv::Mat mat);
 
+    void ViewImageResult(cv::Mat mat);
+
     void threadExit();
+
+    void saveEnd();
 };
 
 #endif // BOVIDEOTHREAD_H

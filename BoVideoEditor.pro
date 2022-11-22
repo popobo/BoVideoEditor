@@ -27,12 +27,16 @@ SOURCES += \
         main.cpp \
     BoVideoUI.cpp \
     BoVideoWidget.cpp \
-    BoVideoThread.cpp
+    BoVideoThread.cpp \
+    BoImagePro.cpp \
+    BoVideoFilter.cpp
 
 HEADERS += \
     BoVideoUI.h \
     BoVideoWidget.h \
-    BoVideoThread.h
+    BoVideoThread.h \
+    BoImagePro.h \
+    BoVideoFilter.h
 
 FORMS += \
     BoVideoUI.ui

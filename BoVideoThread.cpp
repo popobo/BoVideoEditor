@@ -1,10 +1,14 @@
 #include "BoVideoThread.h"
+#include "BoVideoFilter.h"
+#include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/videoio.hpp>
 
 BoVideoThread::BoVideoThread() { start(); }
+
+bool BoVideoThread::getIsWrite() const { return m_isWrite; }
 
 int BoVideoThread::getFps() const { return m_fps; }
 
@@ -27,6 +31,38 @@ bool BoVideoThread::seek(double position) {
     int ret = m_videoCaptureOne.set(cv::CAP_PROP_POS_FRAMES,
                                     (int)(position * m_totalFrameOne));
     return ret;
+}
+
+bool BoVideoThread::startSave(const std::string &filename, int width,
+
+                              int height) {
+    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    if (!m_videoCaptureOne.isOpened()) {
+        return false;
+    }
+    if (width <= 0) {
+        width = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_WIDTH);
+    }
+    if (height <= 0) {
+        height = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_HEIGHT);
+    }
+
+    m_videoWriter.open(filename, cv::VideoWriter::fourcc('X', '2', '6', '4'),
+                       m_fps, cv::Size(width, height));
+    if (!m_videoWriter.isOpened()) {
+        std::cout << "failed to open save file" << std::endl;
+        return false;
+    }
+
+    m_isWrite = true;
+    return true;
+}
+
+bool BoVideoThread::stopSave() {
+    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    m_videoWriter.release();
+    m_isWrite = false;
+    return true;
 }
 
 void BoVideoThread::setIsExit(bool value) {
@@ -57,6 +93,11 @@ void BoVideoThread::run() {
         cv::Mat matOne;
         if (!m_videoCaptureOne.read(matOne) || matOne.empty()) {
             guard.unlock();
+            // 导出到结尾
+            if (m_isWrite) {
+                stopSave();
+                saveEnd();
+            }
             msleep(5);
             continue;
         }
@@ -65,8 +106,18 @@ void BoVideoThread::run() {
         // To Do
         // linux下，必须在msleep之前解锁, 否则会卡顿，具体原因待查
         guard.unlock();
-        ViewImageOne(matOne);
+
+        auto result = BoVideoFilter::getInstance()->filter(matOne);
+
         int sleepTime = 1000 / m_fps;
+        if (m_isWrite) {
+            m_videoWriter.write(result);
+            sleepTime = 1;
+        } else {
+            ViewImageOne(matOne);
+            ViewImageResult(result);
+        }
+
         msleep(sleepTime);
         // guard.unlock();
     }
