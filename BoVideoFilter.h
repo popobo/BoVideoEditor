@@ -11,11 +11,15 @@ enum TaskType {
     TASK_FLIPX,
     TASK_FLIPY,
     TASK_FLIPXY,
+    TASK_RESIZE,
 };
 
 struct Task {
     TaskType type;
     std::vector<double> parameter;
+
+    Task(TaskType _type, const std::vector<double> &_parameter = {})
+        : type(_type), parameter(_parameter) {}
 };
 
 class BoVideoFilter {
@@ -26,6 +30,8 @@ class BoVideoFilter {
     static BoVideoFilter *getInstance();
     BoVideoFilter();
     virtual ~BoVideoFilter();
+    virtual int getResultWidht() = 0;
+    virtual int getResultHeight() = 0;
 };
 
 #endif // BOVIDEOFILTER_H

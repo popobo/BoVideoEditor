@@ -126,7 +126,6 @@ void BoVideoThread::run() {
         }
 
         msleep(sleepTime);
-        // guard.unlock();
     }
 }
 

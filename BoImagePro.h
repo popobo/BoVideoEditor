@@ -21,6 +21,8 @@ class BoImagePro {
     void flipY();
     void flipXY();
 
+    void resize(int width, int height);
+
   private:
     //原图
     cv::Mat m_src1, m_src2;

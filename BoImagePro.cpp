@@ -63,4 +63,11 @@ void BoImagePro::flipXY() {
     cv::flip(m_result, m_result, -1);
 }
 
+void BoImagePro::resize(int width, int height) {
+    if (m_result.empty()) {
+        return;
+    }
+    cv::resize(m_result, m_result, cv::Size(width, height));
+}
+
 BoImagePro::BoImagePro() {}

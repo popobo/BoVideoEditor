@@ -125,6 +125,15 @@ void BoVideoUI::setFilter() {
     default:
         break;
     }
+
+    // resize
+    if (ui->spinBoxResultWidth->value() > 0 &&
+        ui->spinBoxResultHeight->value() > 0) {
+        BoVideoFilter::getInstance()->addTask(
+            {TASK_RESIZE,
+             {(double)ui->spinBoxResultWidth->value(),
+              (double)ui->spinBoxResultHeight->value()}});
+    }
 }
 
 void BoVideoUI::exportFile() {
@@ -139,7 +148,9 @@ void BoVideoUI::exportFile() {
     }
 
     std::string filenameStd = filename.toLocal8Bit().data();
-    if (BoVideoThread::getInstance().startSave(filenameStd)) {
+    if (BoVideoThread::getInstance().startSave(
+            filenameStd, BoVideoFilter::getInstance()->getResultWidht(),
+            BoVideoFilter::getInstance()->getResultHeight())) {
         ui->pushButtonOpenExport->setText("Stop Export");
     }
 }

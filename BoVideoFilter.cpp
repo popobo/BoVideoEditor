@@ -5,11 +5,11 @@
 class CBoVideoFilter : public BoVideoFilter {
   public:
     cv::Mat filter(cv::Mat mat1, cv::Mat mat2 = cv::Mat()) override {
-        std::unique_lock<std::mutex> guard{mutexTask};
+        std::unique_lock<std::mutex> guard{m_mutexTask};
         BoImagePro imagePro;
         imagePro.setData(mat1, mat2);
         // 注意循环中vector.size()的效率问题
-        for (const auto &task : tasks) {
+        for (const auto &task : m_tasks) {
             switch (task.type) {
             case TASK_GAIN:
                 imagePro.gain(task.parameter[0], task.parameter[1]);
@@ -22,6 +22,7 @@ class CBoVideoFilter : public BoVideoFilter {
                 break;
             case TASK_ROTATE270:
                 imagePro.rotate270();
+                break;
             case TASK_FLIPX:
                 imagePro.flipX();
                 break;
@@ -31,6 +32,10 @@ class CBoVideoFilter : public BoVideoFilter {
             case TASK_FLIPXY:
                 imagePro.flipXY();
                 break;
+            case TASK_RESIZE:
+                m_resultWidth = task.parameter[0];
+                m_resultHeight = task.parameter[1];
+                imagePro.resize(task.parameter[0], task.parameter[1]);
             default:
                 break;
             }
@@ -41,18 +46,23 @@ class CBoVideoFilter : public BoVideoFilter {
     }
 
     void addTask(Task task) override {
-        std::unique_lock<std::mutex> guard{mutexTask};
-        tasks.push_back(task);
+        std::unique_lock<std::mutex> guard{m_mutexTask};
+        m_tasks.push_back(task);
     }
 
     void clearTask() override {
-        std::unique_lock<std::mutex> guard{mutexTask};
-        tasks.clear();
+        std::unique_lock<std::mutex> guard{m_mutexTask};
+        m_tasks.clear();
     }
 
+    int getResultWidht() override { return m_resultWidth; }
+    int getResultHeight() override { return m_resultHeight; }
+
   private:
-    std::vector<Task> tasks;
-    std::mutex mutexTask;
+    std::vector<Task> m_tasks;
+    std::mutex m_mutexTask;
+    int m_resultWidth;
+    int m_resultHeight;
 };
 
 BoVideoFilter *BoVideoFilter::getInstance() {
