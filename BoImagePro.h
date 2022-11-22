@@ -13,6 +13,14 @@ class BoImagePro {
     // 对比度 contrast 1.0~3.0
     void gain(double bright, double contrast);
 
+    void rotate90();
+    void rotate180();
+    void rotate270();
+
+    void flipX();
+    void flipY();
+    void flipXY();
+
   private:
     //原图
     cv::Mat m_src1, m_src2;

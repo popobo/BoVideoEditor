@@ -29,6 +29,10 @@ class BoVideoUI : public QWidget {
 
     void exportEnd();
 
+    void play();
+
+    void pause();
+
   private:
     Ui::BoVideoUI *ui;
     bool m_sliderPressed;

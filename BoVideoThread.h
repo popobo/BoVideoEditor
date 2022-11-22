@@ -13,6 +13,11 @@ class BoVideoThread : public QThread {
     static BoVideoThread &getInstance();
     void run();
     bool openFile(const std::string &filename);
+
+    void play();
+
+    void pause();
+
     ~BoVideoThread();
 
     void setIsExit(bool value);
@@ -39,12 +44,12 @@ class BoVideoThread : public QThread {
   private:
     cv::VideoCapture m_videoCaptureOne;
     cv::VideoWriter m_videoWriter;
-    std::mutex m_mutexOpenFile;
+    std::mutex m_mutex;
     bool m_isExit = false;
     double m_fps = 25;
     double m_totalFrameOne = 0;
     bool m_isWrite = false;
-
+    bool m_isPlay = false;
   signals:
     // 保证信号能被处理，否则可能内存溢出
     void ViewImageOne(cv::Mat mat);

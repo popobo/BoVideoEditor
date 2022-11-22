@@ -5,6 +5,12 @@
 enum TaskType {
     TASK_NONE,
     TASK_GAIN,
+    TASK_ROTATE90,
+    TASK_ROTATE180,
+    TASK_ROTATE270,
+    TASK_FLIPX,
+    TASK_FLIPY,
+    TASK_FLIPXY,
 };
 
 struct Task {

@@ -14,7 +14,7 @@ int BoVideoThread::getFps() const { return m_fps; }
 
 double BoVideoThread::getPlayPosition() {
     double position = 0;
-    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    std::unique_lock<std::mutex> guard{m_mutex};
     if (!m_videoCaptureOne.isOpened()) {
         return 0;
     }
@@ -24,7 +24,7 @@ double BoVideoThread::getPlayPosition() {
 
 // 后续要考虑两个视频不同帧率的影响
 bool BoVideoThread::seek(double position) {
-    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    std::unique_lock<std::mutex> guard{m_mutex};
     if (!m_videoCaptureOne.isOpened()) {
         return false;
     }
@@ -36,7 +36,7 @@ bool BoVideoThread::seek(double position) {
 bool BoVideoThread::startSave(const std::string &filename, int width,
 
                               int height) {
-    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    std::unique_lock<std::mutex> guard{m_mutex};
     if (!m_videoCaptureOne.isOpened()) {
         return false;
     }
@@ -59,14 +59,14 @@ bool BoVideoThread::startSave(const std::string &filename, int width,
 }
 
 bool BoVideoThread::stopSave() {
-    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    std::unique_lock<std::mutex> guard{m_mutex};
     m_videoWriter.release();
     m_isWrite = false;
     return true;
 }
 
 void BoVideoThread::setIsExit(bool value) {
-    std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+    std::unique_lock<std::mutex> guard{m_mutex};
     m_isExit = value;
 }
 
@@ -79,12 +79,19 @@ BoVideoThread &BoVideoThread::getInstance() {
 
 void BoVideoThread::run() {
     for (;;) {
-        std::unique_lock<std::mutex> guard{m_mutexOpenFile};
+        std::unique_lock<std::mutex> guard{m_mutex};
         if (m_isExit) {
             guard.unlock();
             threadExit();
             break;
         }
+
+        if (!m_isPlay) {
+            guard.unlock();
+            msleep(5);
+            continue;
+        }
+
         if (!m_videoCaptureOne.isOpened()) {
             guard.unlock();
             msleep(5);
@@ -124,7 +131,7 @@ void BoVideoThread::run() {
 }
 
 bool BoVideoThread::openFile(const std::string &filename) {
-    std::lock_guard<std::mutex> lock{m_mutexOpenFile};
+    std::lock_guard<std::mutex> lock{m_mutex};
     bool ret = m_videoCaptureOne.open(filename);
     m_fps = m_videoCaptureOne.get(cv::CAP_PROP_FPS);
     m_fps = m_fps == 0 ? 25 : m_fps;
@@ -132,6 +139,16 @@ bool BoVideoThread::openFile(const std::string &filename) {
     m_totalFrameOne = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_COUNT);
     m_totalFrameOne = m_totalFrameOne == 0 ? 1 : m_totalFrameOne;
     return ret;
+}
+
+void BoVideoThread::play() {
+    std::lock_guard<std::mutex> lock{m_mutex};
+    m_isPlay = true;
+}
+
+void BoVideoThread::pause() {
+    std::lock_guard<std::mutex> lock{m_mutex};
+    m_isPlay = false;
 }
 
 // 添加Q_OBJECT后必须实现析构函数

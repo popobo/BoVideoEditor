@@ -39,6 +39,11 @@ BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
 
     connect(ui->pushButtonSet, SIGNAL(clicked()), this, SLOT(setFilter()));
 
+    connect(ui->pushButtonPlay, SIGNAL(clicked()), this, SLOT(play()));
+    connect(ui->pushButtonPause, SIGNAL(clicked()), this, SLOT(pause()));
+
+    pause();
+
     setWindowFlags(Qt::FramelessWindowHint);
     // 记录timerID然后才能关闭定时器
     startTimer(40);
@@ -90,6 +95,36 @@ void BoVideoUI::setFilter() {
                  {(double)(ui->spinBoxBright->value()),
                   ui->doubleSpinBoxContrast->value()}});
     }
+
+    // 视频旋转 1 90 2 180 3 270
+    switch (ui->comboBoxRotate->currentIndex()) {
+    case 1:
+        BoVideoFilter::getInstance()->addTask(Task{TASK_ROTATE90});
+        break;
+    case 2:
+        BoVideoFilter::getInstance()->addTask(Task{TASK_ROTATE180});
+        break;
+    case 3:
+        BoVideoFilter::getInstance()->addTask(Task{TASK_ROTATE270});
+        break;
+    default:
+        break;
+    }
+
+    // 镜像
+    switch (ui->comboBoxFlip->currentIndex()) {
+    case 1:
+        BoVideoFilter::getInstance()->addTask(Task{TASK_FLIPX});
+        break;
+    case 2:
+        BoVideoFilter::getInstance()->addTask(Task{TASK_FLIPY});
+        break;
+    case 3:
+        BoVideoFilter::getInstance()->addTask(Task{TASK_FLIPXY});
+        break;
+    default:
+        break;
+    }
 }
 
 void BoVideoUI::exportFile() {
@@ -110,3 +145,16 @@ void BoVideoUI::exportFile() {
 }
 
 void BoVideoUI::exportEnd() { ui->pushButtonOpenExport->setText("Export"); }
+
+void BoVideoUI::play() {
+    ui->pushButtonPause->show();
+    ui->pushButtonPause->setGeometry(ui->pushButtonPlay->geometry());
+    ui->pushButtonPlay->hide();
+    BoVideoThread::getInstance().play();
+}
+
+void BoVideoUI::pause() {
+    ui->pushButtonPlay->show();
+    ui->pushButtonPause->hide();
+    BoVideoThread::getInstance().pause();
+}

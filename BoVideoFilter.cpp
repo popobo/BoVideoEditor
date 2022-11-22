@@ -14,6 +14,23 @@ class CBoVideoFilter : public BoVideoFilter {
             case TASK_GAIN:
                 imagePro.gain(task.parameter[0], task.parameter[1]);
                 break;
+            case TASK_ROTATE90:
+                imagePro.rotate90();
+                break;
+            case TASK_ROTATE180:
+                imagePro.rotate180();
+                break;
+            case TASK_ROTATE270:
+                imagePro.rotate270();
+            case TASK_FLIPX:
+                imagePro.flipX();
+                break;
+            case TASK_FLIPY:
+                imagePro.flipY();
+                break;
+            case TASK_FLIPXY:
+                imagePro.flipXY();
+                break;
             default:
                 break;
             }

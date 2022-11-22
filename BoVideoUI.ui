@@ -164,6 +164,92 @@ QPushButton:!hover
     <string>Export</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButtonPlay">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>340</y>
+     <width>90</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Play</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonPause">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>370</y>
+     <width>90</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBoxRotate">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>410</y>
+     <width>86</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>90</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>180</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>270</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="comboBoxFlip">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>450</y>
+     <width>86</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>No Flip</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Y</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>XY</string>
+    </property>
+   </item>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
