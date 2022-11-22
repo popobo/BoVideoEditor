@@ -30,7 +30,7 @@ BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
     connect(ui->horizontalSliderProgress, SIGNAL(sliderPressed()), this,
             SLOT(sliderPressed()));
     connect(ui->horizontalSliderProgress, SIGNAL(sliderReleased()), this,
-            SLOT(sliderPressed()));
+            SLOT(sliderReleased()));
     connect(ui->horizontalSliderProgress, SIGNAL(sliderMoved(int)), this,
             SLOT(sliderMoved(int)));
 
