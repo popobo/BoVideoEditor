@@ -29,12 +29,20 @@ class BoVideoThread : public QThread {
     bool seek(double position);
 
     // 开始保存视频
-    bool startSave(const std::string &filename, int width = 0, int height = 0);
+    bool startSave(const std::string &filename);
 
     // 停止保存视频，写入视频帧的索引
     bool stopSave();
 
     bool getIsWrite() const;
+
+    int getVideoOneWidth() const;
+
+    int getVideoOneHeight() const;
+
+    int getResultWidth() const;
+
+    int getResultHeight() const;
 
   private:
     BoVideoThread();
@@ -50,6 +58,11 @@ class BoVideoThread : public QThread {
     double m_totalFrameOne = 0;
     bool m_isWrite = false;
     bool m_isPlay = false;
+    int m_videoOneWidth = 0;
+    int m_videoOneHeight = 0;
+    int m_resultWidth = 0;
+    int m_resultHeight = 0;
+    bool m_isColor = true;
   signals:
     // 保证信号能被处理，否则可能内存溢出
     void ViewImageOne(cv::Mat mat);

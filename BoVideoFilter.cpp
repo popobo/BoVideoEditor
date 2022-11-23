@@ -33,9 +33,21 @@ class CBoVideoFilter : public BoVideoFilter {
                 imagePro.flipXY();
                 break;
             case TASK_RESIZE:
-                m_resultWidth = task.parameter[0];
-                m_resultHeight = task.parameter[1];
                 imagePro.resize(task.parameter[0], task.parameter[1]);
+                break;
+            case TASK_PYUP:
+                imagePro.pyUp(task.parameter[0]);
+                break;
+            case TASK_PYDOWN:
+                imagePro.pyDown(task.parameter[0]);
+                break;
+            case TASK_CLIP:
+                imagePro.clip(task.parameter[0], task.parameter[1],
+                              task.parameter[2], task.parameter[3]);
+                break;
+            case TASK_GRAY:
+                imagePro.gray();
+                break;
             default:
                 break;
             }
@@ -55,14 +67,9 @@ class CBoVideoFilter : public BoVideoFilter {
         m_tasks.clear();
     }
 
-    int getResultWidht() override { return m_resultWidth; }
-    int getResultHeight() override { return m_resultHeight; }
-
   private:
     std::vector<Task> m_tasks;
     std::mutex m_mutexTask;
-    int m_resultWidth;
-    int m_resultHeight;
 };
 
 BoVideoFilter *BoVideoFilter::getInstance() {

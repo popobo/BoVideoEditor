@@ -23,6 +23,13 @@ class BoImagePro {
 
     void resize(int width, int height);
 
+    void pyDown(int count);
+    void pyUp(int count);
+
+    void clip(int posX, int posY, int width, int height);
+
+    void gray();
+
   private:
     //原图
     cv::Mat m_src1, m_src2;

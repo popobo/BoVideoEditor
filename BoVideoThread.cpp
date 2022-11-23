@@ -8,7 +8,15 @@
 
 BoVideoThread::BoVideoThread() { start(); }
 
+int BoVideoThread::getResultHeight() const { return m_resultHeight; }
+
+int BoVideoThread::getResultWidth() const { return m_resultWidth; }
+
 bool BoVideoThread::getIsWrite() const { return m_isWrite; }
+
+int BoVideoThread::getVideoOneWidth() const { return m_videoOneWidth; }
+
+int BoVideoThread::getVideoOneHeight() const { return m_videoOneHeight; }
 
 int BoVideoThread::getFps() const { return m_fps; }
 
@@ -33,22 +41,15 @@ bool BoVideoThread::seek(double position) {
     return ret;
 }
 
-bool BoVideoThread::startSave(const std::string &filename, int width,
-
-                              int height) {
+bool BoVideoThread::startSave(const std::string &filename) {
     std::unique_lock<std::mutex> guard{m_mutex};
     if (!m_videoCaptureOne.isOpened()) {
         return false;
     }
-    if (width <= 0) {
-        width = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_WIDTH);
-    }
-    if (height <= 0) {
-        height = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_HEIGHT);
-    }
 
     m_videoWriter.open(filename, cv::VideoWriter::fourcc('X', '2', '6', '4'),
-                       m_fps, cv::Size(width, height));
+                       m_fps, cv::Size(m_resultWidth, m_resultHeight),
+                       m_isColor);
     if (!m_videoWriter.isOpened()) {
         std::cout << "failed to open save file" << std::endl;
         return false;
@@ -115,6 +116,10 @@ void BoVideoThread::run() {
         guard.unlock();
 
         auto result = BoVideoFilter::getInstance()->filter(matOne);
+        m_resultHeight = result.rows;
+        m_resultWidth = result.cols;
+
+        m_isColor = !(result.type() == CV_8UC1);
 
         int sleepTime = 1000 / m_fps;
         if (m_isWrite) {
@@ -137,6 +142,9 @@ bool BoVideoThread::openFile(const std::string &filename) {
 
     m_totalFrameOne = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_COUNT);
     m_totalFrameOne = m_totalFrameOne == 0 ? 1 : m_totalFrameOne;
+
+    m_videoOneWidth = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_WIDTH);
+    m_videoOneHeight = m_videoCaptureOne.get(cv::CAP_PROP_FRAME_HEIGHT);
     return ret;
 }
 

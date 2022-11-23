@@ -70,4 +70,39 @@ void BoImagePro::resize(int width, int height) {
     cv::resize(m_result, m_result, cv::Size(width, height));
 }
 
+void BoImagePro::pyDown(int count) {
+    if (m_result.empty()) {
+        return;
+    }
+    for (int i = 0; i < count; ++i) {
+        cv::pyrDown(m_result, m_result);
+    }
+}
+
+void BoImagePro::pyUp(int count) {
+    if (m_result.empty()) {
+        return;
+    }
+    for (int i = 0; i < count; ++i) {
+        cv::pyrUp(m_result, m_result);
+    }
+}
+
+void BoImagePro::clip(int posX, int posY, int width, int height) {
+    if (posX < 0 || posY < 0 || width < 0 || height < 0) {
+        return;
+    }
+    if (posX > m_result.cols || posY > m_result.cols) {
+        return;
+    }
+    m_result = m_result(cv::Rect(posX, posY, width, height));
+}
+
+void BoImagePro::gray() {
+    if (m_result.empty()) {
+        return;
+    }
+    cv::cvtColor(m_result, m_result, cv::COLOR_RGB2GRAY);
+}
+
 BoImagePro::BoImagePro() {}

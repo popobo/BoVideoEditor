@@ -12,6 +12,10 @@ enum TaskType {
     TASK_FLIPY,
     TASK_FLIPXY,
     TASK_RESIZE,
+    TASK_PYUP,
+    TASK_PYDOWN,
+    TASK_CLIP,
+    TASK_GRAY,
 };
 
 struct Task {
@@ -30,8 +34,6 @@ class BoVideoFilter {
     static BoVideoFilter *getInstance();
     BoVideoFilter();
     virtual ~BoVideoFilter();
-    virtual int getResultWidht() = 0;
-    virtual int getResultHeight() = 0;
 };
 
 #endif // BOVIDEOFILTER_H

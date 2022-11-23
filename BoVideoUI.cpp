@@ -126,6 +126,8 @@ void BoVideoUI::setFilter() {
         break;
     }
 
+    bool isResize = false;
+
     // resize
     if (ui->spinBoxResultWidth->value() > 0 &&
         ui->spinBoxResultHeight->value() > 0) {
@@ -133,6 +135,38 @@ void BoVideoUI::setFilter() {
             {TASK_RESIZE,
              {(double)ui->spinBoxResultWidth->value(),
               (double)ui->spinBoxResultHeight->value()}});
+        ui->spinBoxPyUp->setValue(0);
+        ui->spinBoxPyDown->setValue(0);
+        isResize = true;
+    } else if (ui->spinBoxPyUp->value() > 0) {
+        BoVideoFilter::getInstance()->addTask(
+            {TASK_PYUP, {(double)ui->spinBoxPyUp->value()}});
+        ui->spinBoxResultWidth->setValue(0);
+        ui->spinBoxResultHeight->setValue(0);
+        ui->spinBoxPyDown->setValue(0);
+        isResize = true;
+    } else if (ui->spinBoxPyDown->value() > 0) {
+        BoVideoFilter::getInstance()->addTask(
+            {TASK_PYDOWN, {(double)ui->spinBoxPyDown->value()}});
+        ui->spinBoxResultWidth->setValue(0);
+        ui->spinBoxResultHeight->setValue(0);
+        ui->spinBoxPyUp->setValue(0);
+        isResize = true;
+    }
+
+    // clip
+    double posX = (double)ui->spinBoxClipPosX->value();
+    double posY = (double)ui->spinBoxClipPosY->value();
+    double width = (double)ui->spinBoxClipWidth->value();
+    double height = (double)ui->spinBoxClipHeight->value();
+    if ((posX >= 0 || posY >= 0) && (width > 0 && height > 0) && !isResize) {
+        BoVideoFilter::getInstance()->addTask(
+            {TASK_CLIP, {posX, posY, width, height}});
+    }
+
+    // currentIndex 1 Gray
+    if (ui->comboBoxColor->currentIndex() == 1) {
+        BoVideoFilter::getInstance()->addTask({TASK_GRAY});
     }
 }
 
@@ -148,9 +182,7 @@ void BoVideoUI::exportFile() {
     }
 
     std::string filenameStd = filename.toLocal8Bit().data();
-    if (BoVideoThread::getInstance().startSave(
-            filenameStd, BoVideoFilter::getInstance()->getResultWidht(),
-            BoVideoFilter::getInstance()->getResultHeight())) {
+    if (BoVideoThread::getInstance().startSave(filenameStd)) {
         ui->pushButtonOpenExport->setText("Stop Export");
     }
 }
