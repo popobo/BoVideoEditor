@@ -42,6 +42,9 @@ BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
     connect(ui->pushButtonPlay, SIGNAL(clicked()), this, SLOT(play()));
     connect(ui->pushButtonPause, SIGNAL(clicked()), this, SLOT(pause()));
 
+    connect(ui->pushButtonSelectMark, SIGNAL(clicked()), this,
+            SLOT(selectMark()));
+
     pause();
 
     setWindowFlags(Qt::FramelessWindowHint);
@@ -168,6 +171,17 @@ void BoVideoUI::setFilter() {
     if (ui->comboBoxColor->currentIndex() == 1) {
         BoVideoFilter::getInstance()->addTask({TASK_GRAY});
     }
+
+    // ad waterMark
+    if (!BoVideoThread::getInstance().getMarkPath().empty()) {
+        BoVideoFilter::getInstance()->addTask(
+            {TASK_MARK,
+             {(double)ui->spinBoxMarkPosX->value(),
+              (double)ui->spinBoxMarkPosY->value(),
+              (double)ui->spinBoxMarkWidth->value(),
+              (double)ui->spinBoxMarkHeight->value(),
+              ui->doubleSpinBoxMarkAlpha->value()}});
+    }
 }
 
 void BoVideoUI::exportFile() {
@@ -200,4 +214,12 @@ void BoVideoUI::pause() {
     ui->pushButtonPlay->show();
     ui->pushButtonPause->hide();
     BoVideoThread::getInstance().pause();
+}
+
+void BoVideoUI::selectMark() {
+    QString filename = QFileDialog::getOpenFileName(
+        nullptr, QString::fromLocal8Bit("Please choose a mark image"));
+    std::string stdFilename = filename.toLocal8Bit().data();
+    BoVideoThread::getInstance().setMarkPath(stdFilename);
+    ui->labelMarkPath->setText(filename);
 }

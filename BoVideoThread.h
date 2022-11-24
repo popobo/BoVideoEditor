@@ -44,6 +44,10 @@ class BoVideoThread : public QThread {
 
     int getResultHeight() const;
 
+    void setMarkPath(const std::string &markPath);
+
+    std::string getMarkPath() const;
+
   private:
     BoVideoThread();
     BoVideoThread(const BoVideoThread &videoThread) = delete;
@@ -63,6 +67,10 @@ class BoVideoThread : public QThread {
     int m_resultWidth = 0;
     int m_resultHeight = 0;
     bool m_isColor = true;
+
+    std::string m_markPath;
+    bool m_isNewMark = false;
+    cv::Mat m_mark;
   signals:
     // 保证信号能被处理，否则可能内存溢出
     void ViewImageOne(cv::Mat mat);

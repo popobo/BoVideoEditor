@@ -33,6 +33,8 @@ class BoVideoUI : public QWidget {
 
     void pause();
 
+    void selectMark();
+
   private:
     Ui::BoVideoUI *ui;
     bool m_sliderPressed;

@@ -48,6 +48,11 @@ class CBoVideoFilter : public BoVideoFilter {
             case TASK_GRAY:
                 imagePro.gray();
                 break;
+            case TASK_MARK:
+                imagePro.mark(task.parameter[0], task.parameter[1],
+                              task.parameter[2], task.parameter[3],
+                              task.parameter[4]);
+                break;
             default:
                 break;
             }

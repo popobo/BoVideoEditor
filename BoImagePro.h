@@ -30,6 +30,8 @@ class BoImagePro {
 
     void gray();
 
+    void mark(int posX, int posY, int width, int height, double alpha);
+
   private:
     //原图
     cv::Mat m_src1, m_src2;

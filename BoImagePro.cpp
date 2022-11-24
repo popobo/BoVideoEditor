@@ -105,4 +105,18 @@ void BoImagePro::gray() {
     cv::cvtColor(m_result, m_result, cv::COLOR_RGB2GRAY);
 }
 
+void BoImagePro::mark(int posX, int posY, int width, int height, double alpha) {
+    if (m_result.empty()) {
+        return;
+    }
+    if (m_src2.empty()) {
+        return;
+    }
+    width = width > m_result.cols ? m_result.cols : width;
+    height = height > m_result.rows ? m_result.rows : height;
+    cv::resize(m_src2, m_src2, cv::Size(width, height));
+    cv::Mat markArea = m_result(cv::Rect(posX, posY, m_src2.cols, m_src2.rows));
+    cv::addWeighted(m_src2, alpha, markArea, 1 - alpha, 0, markArea);
+}
+
 BoImagePro::BoImagePro() {}

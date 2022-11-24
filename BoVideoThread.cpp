@@ -8,6 +8,13 @@
 
 BoVideoThread::BoVideoThread() { start(); }
 
+std::string BoVideoThread::getMarkPath() const { return m_markPath; }
+
+void BoVideoThread::setMarkPath(const std::string &markPath) {
+    m_isNewMark = m_markPath != markPath;
+    m_markPath = markPath;
+}
+
 int BoVideoThread::getResultHeight() const { return m_resultHeight; }
 
 int BoVideoThread::getResultWidth() const { return m_resultWidth; }
@@ -109,13 +116,13 @@ void BoVideoThread::run() {
             msleep(5);
             continue;
         }
-        // msleep放在lock中避免退出时crash
-        // 看是否需要优化
-        // To Do
-        // linux下，必须在msleep之前解锁, 否则会卡顿，具体原因待查
-        guard.unlock();
 
-        auto result = BoVideoFilter::getInstance()->filter(matOne);
+        if (m_isNewMark) {
+            m_mark = cv::imread(m_markPath);
+            m_isNewMark = false;
+        }
+
+        auto result = BoVideoFilter::getInstance()->filter(matOne, m_mark);
         m_resultHeight = result.rows;
         m_resultWidth = result.cols;
 
@@ -129,6 +136,11 @@ void BoVideoThread::run() {
             ViewImageOne(matOne);
             ViewImageResult(result);
         }
+        // msleep放在lock中避免退出时crash
+        // 看是否需要优化
+        // To Do
+        // linux下，必须在msleep之前解锁, 否则会卡顿，具体原因待查
+        guard.unlock();
 
         msleep(sleepTime);
     }

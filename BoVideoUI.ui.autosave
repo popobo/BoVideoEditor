@@ -53,8 +53,8 @@ QPushButton:!hover
   <widget class="QPushButton" name="pushButtonOpenFile">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>340</y>
+     <x>430</x>
+     <y>370</y>
      <width>90</width>
      <height>25</height>
     </rect>
@@ -79,19 +79,6 @@ QPushButton:!hover
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonSet">
-   <property name="geometry">
-    <rect>
-     <x>690</x>
-     <y>800</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Set</string>
-   </property>
-  </widget>
   <widget class="BoVideoWidget" name="openGLWidgetResult">
    <property name="geometry">
     <rect>
@@ -105,8 +92,8 @@ QPushButton:!hover
   <widget class="QPushButton" name="pushButtonOpenExport">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>340</y>
+     <x>550</x>
+     <y>370</y>
      <width>90</width>
      <height>25</height>
     </rect>
@@ -118,8 +105,8 @@ QPushButton:!hover
   <widget class="QPushButton" name="pushButtonPlay">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>340</y>
+     <x>660</x>
+     <y>420</y>
      <width>90</width>
      <height>25</height>
     </rect>
@@ -131,8 +118,8 @@ QPushButton:!hover
   <widget class="QPushButton" name="pushButtonPause">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>340</y>
+     <x>670</x>
+     <y>370</y>
      <width>90</width>
      <height>25</height>
     </rect>
@@ -141,16 +128,84 @@ QPushButton:!hover
     <string>Pause</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>430</y>
-     <width>393</width>
-     <height>394</height>
+     <x>0</x>
+     <y>410</y>
+     <width>415</width>
+     <height>436</height>
     </rect>
    </property>
+   <property name="title">
+    <string/>
+   </property>
    <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBoxClip">
+      <property name="title">
+       <string>Clip</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelClipPosX">
+         <property name="text">
+          <string>PosX</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="spinBoxClipPosX">
+         <property name="maximum">
+          <number>9999</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="labelClipPosY">
+         <property name="text">
+          <string>PosY</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="spinBoxClipPosY">
+         <property name="maximum">
+          <number>9999</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelClipWidth">
+         <property name="text">
+          <string>Width</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="spinBoxClipWidth">
+         <property name="maximum">
+          <number>9999</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="labelClipHeight">
+         <property name="text">
+          <string>Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="spinBoxClipHeight">
+         <property name="maximum">
+          <number>9999</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="0" column="0" rowspan="2">
      <widget class="QGroupBox" name="groupBoxSizeChange">
       <property name="title">
@@ -299,65 +354,43 @@ QPushButton:!hover
       </layout>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QGroupBox" name="groupBoxClip">
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="groupBoxGain">
       <property name="title">
-       <string>Clip</string>
+       <string>Gain</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QLabel" name="labelClipPosX">
+        <widget class="QLabel" name="labelBright">
          <property name="text">
-          <string>PosX</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="spinBoxClipPosX">
-         <property name="maximum">
-          <number>9999</number>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelClipPosY">
-         <property name="text">
-          <string>PosY</string>
+          <string>Bright(0~100)</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBoxClipPosY">
+        <widget class="QSpinBox" name="spinBoxBright">
          <property name="maximum">
-          <number>9999</number>
+          <number>100</number>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="labelClipWidth">
+        <widget class="QLabel" name="labelContrast">
          <property name="text">
-          <string>Width</string>
+          <string>Contrast(1.0~3.0)</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBoxClipWidth">
-         <property name="maximum">
-          <number>9999</number>
+        <widget class="QDoubleSpinBox" name="doubleSpinBoxContrast">
+         <property name="minimum">
+          <double>1.000000000000000</double>
          </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="labelClipHeight">
-         <property name="text">
-          <string>Height</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="spinBoxClipHeight">
          <property name="maximum">
-          <number>9999</number>
+          <double>3.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
          </property>
         </widget>
        </item>
@@ -463,47 +496,11 @@ QPushButton:!hover
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="groupBoxGain">
-      <property name="title">
-       <string>Gain</string>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="pushButtonSet">
+      <property name="text">
+       <string>Set</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="labelBright">
-         <property name="text">
-          <string>Bright(0~100)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBoxBright">
-         <property name="maximum">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="labelContrast">
-         <property name="text">
-          <string>Contrast(1.0~3.0)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBoxContrast">
-         <property name="minimum">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>3.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>0.100000000000000</double>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </item>
    </layout>
