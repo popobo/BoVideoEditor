@@ -42,12 +42,18 @@ FORMS += \
     BoVideoUI.ui
 
 INCLUDEPATH += $$PWD/opencv/include
+INCLUDEPATH += $$PWD/ffmpeg/include
 
-LIBS += $$PWD/opencv/lib/libopencv_world.so
-
-LIBPATH += $$PWD/opencv/lib
-
-QMAKE_RPATHDIR += $$PWD/opencv/lib
+# 需要先安装ffmpeg，然后安装OpenCV
+LIBS += -lopencv_world
+LIBS += -lavcodec
+LIBS += -lavformat
+LIBS += -lavdevice
+LIBS += -lavfilter
+LIBS += -lswresample
+LIBS += -lswscale
+LIBS += -lavutil
+LIBS += -lx265
 
 #MOC_DIR = $$PWD/build/temp/moc
 #RCC_DIR = $$PWD/build/temp/rcc

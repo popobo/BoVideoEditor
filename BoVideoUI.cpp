@@ -4,8 +4,12 @@
 #include <BoVideoThread.h>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <iostream>
 #include <opencv2/core.hpp>
 #include <string>
+extern "C" {
+#include "libavformat/avformat.h"
+}
 
 BoVideoUI::BoVideoUI(QWidget *parent) : QWidget(parent), ui(new Ui::BoVideoUI) {
     ui->setupUi(this);
@@ -216,10 +220,19 @@ void BoVideoUI::pause() {
     BoVideoThread::getInstance().pause();
 }
 
+AVFormatContext *aVFormatContext = 0;
 void BoVideoUI::selectMark() {
     QString filename = QFileDialog::getOpenFileName(
         nullptr, QString::fromLocal8Bit("Please choose a mark image"));
     std::string stdFilename = filename.toLocal8Bit().data();
-    BoVideoThread::getInstance().setMarkPath(stdFilename);
-    ui->labelMarkPath->setText(filename);
+    //    BoVideoThread::getInstance().setMarkPath(stdFilename);
+    //    ui->labelMarkPath->sdusetText(filename);
+    int re = avformat_open_input(&aVFormatContext, stdFilename.c_str(), 0, 0);
+    if (re != 0) {
+        char buf[1024] = {0};
+        av_strerror(re, buf, sizeof(buf));
+        std::cout << buf << std::endl;
+        return;
+    }
+    std::cout << "avformat_open_input successfully" << std::endl;
 }
